@@ -1,4 +1,4 @@
-var io = require('socket.io')(4001);
+var io = require('socket.io')(3001);
 var vehicleConnectionUtils = require('./lib/vehicle-connection-utils.js');
 
 vehicleConnectionUtils.initializeVehiclesServer(io);
@@ -20,7 +20,7 @@ io.of('/control').on('connection', function (socket) {
     socket.controlled_vehicle_name = vehicle_name
 
     if(vehicleConnectionUtils.captured(vehicle_name))
-      throw new Error('Unexpected! Vehicle has been already captured.')
+      throw new Error('Unexpected! Vehicle has already been captured.')
 
     vehicleConnectionUtils.captureVehicleSocket(vehicle_name)
     io.of('/list').emit('cars-list', vehicleConnectionUtils.vehicleNames())
