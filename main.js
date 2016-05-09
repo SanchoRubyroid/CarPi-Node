@@ -2,6 +2,7 @@ var io = require('socket.io')(3001);
 var vehicleConnectionUtils = require('./lib/vehicle-connection-utils.js');
 
 vehicleConnectionUtils.initializeVehiclesServer(io);
+vehicleConnectionUtils.initializeVideoStreamServer(io);
 
 io.of('/list').on('connection', function (socket) {
   console.log('List Connection: ' + socket.id);
@@ -22,12 +23,14 @@ io.of('/control').on('connection', function (socket) {
     if(vehicleConnectionUtils.captured(vehicle_name))
       throw new Error('Unexpected! Vehicle has already been captured.')
 
-    vehicleConnectionUtils.captureVehicleSocket(vehicle_name)
+    vehicleConnectionUtils.captureVehicleSocket(vehicle_name, socket)
+    vehicleConnectionUtils.sendToVehicle(socket.controlled_vehicle_name, new Buffer([103,0,0]))
+
     io.of('/list').emit('cars-list', vehicleConnectionUtils.vehicleNames())
   })
 
   socket.on('disconnect', () => {
-    vehicleConnectionUtils.releaseVehicleSocket(socket.controlled_vehicle_name)
+    vehicleConnectionUtils.releaseVehicleSocket(socket)
     io.of('/list').emit('cars-list', vehicleConnectionUtils.vehicleNames())
   })
 
@@ -35,7 +38,6 @@ io.of('/control').on('connection', function (socket) {
     if(socket.controlled_vehicle_name === undefined)
       throw new Error('Unexpected! controlled_vehicle_name should have been set.')
 
-    var vehicle_socket = vehicleConnectionUtils.getVehicleSocketByName(socket.controlled_vehicle_name)
-    vehicle_socket.write(new Buffer(data))
+    vehicleConnectionUtils.sendToVehicle(socket.controlled_vehicle_name, new Buffer(data))
   })
 });
