@@ -1,4 +1,4 @@
-var connectionUtils = require('./lib/connection-utils.js');
+import connectionUtils from './lib/connection-utils.js';
 
 connectionUtils.initializeVehiclesServer();
 connectionUtils.initializeVideoStreamServer();
