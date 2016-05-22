@@ -1,4 +1,6 @@
-import connectionUtils from './lib/connection-utils.js';
+import ConnectionUtils from './lib/connection-utils.js';
+
+let connectionUtils = new ConnectionUtils();
 
 connectionUtils.initializeVehiclesServer();
 connectionUtils.initializeVideoStreamServer();
