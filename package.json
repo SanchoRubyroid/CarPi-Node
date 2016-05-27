@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/SanchoRubyroid/CarPi-Node#readme",
   "devDependencies": {
-    "babel-preset-es2015": "^6.9.0"
+    "babel-preset-es2015": "^6.9.0",
+    "babel-register": "^6.9.0"
   },
   "dependencies": {
     "socket.io": "^1.4.6",
